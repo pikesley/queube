@@ -1,0 +1,17 @@
+[Unit]
+Description=Queube RabbitMQ Worker
+After=rabbitmq-server
+
+[Service]
+User=pi
+WorkingDirectory=/home/pi/Queube/
+ExecStart=/bin/bash -lc 'sudo python3 worker.py'
+Restart=always
+StandardInput=null
+StandardOutput=syslog
+StandardError=syslog
+KillMode=mixed
+TimeoutStopSec=5
+
+[Install]
+WantedBy=multi-user.target
