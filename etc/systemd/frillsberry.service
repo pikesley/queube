@@ -1,0 +1,14 @@
+[Unit]
+Description=Frillsberry
+After=docker.service
+After=queube-worker.service
+Requires=docker.service
+Requires=queube-worker.service
+
+[Service]
+TimeoutStartSec=0
+Restart=always
+ExecStart=/usr/bin/docker run --rm --name frillsberry pikesley/frillsberry
+
+[Install]
+WantedBy=multi-user.target

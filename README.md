@@ -1,33 +1,46 @@
 # Queube
 
-_Processing the queued data from [CubeREST](https://github.com/pikesley/CubeREST) to make the lights come on_
+## Installing it
 
-## Installation
+From a box-fresh install of Raspberry Pi OS Lite via [NOOBS 3.5](https://www.raspberrypi.org/documentation/installation/noobs.md):
 
-On a fresh, clean [Raspbian](https://www.raspbian.org/) install (which should already have Python 3), try the following handy `make` targets
+### Enable SSH
 
-### `make apt`
+Login on the Pi's console and
 
-* installs `rabbitmq-server`
+```bash
+sudo raspi-config nonint do_ssh 0
+```
 
-### `make cubebit`
+You should now be able to get on to the Pi with
 
-* installs the [NeoPixel and Cube:Bit Python libs](https://4tronix.co.uk/blog/?p=1827)
+```bash
+ssh pi@raspberrypi.local
+```
 
-### `make install`
+### Install the software
 
-* installs from `requirements.txt`
+(Optionally) change the hostname:
 
-### `make systemd`
+```bash
+sudo raspi-config nonint do_hostname queube
+```
 
-* installs the `systemd` start-up script - this target relies on this all being checked-out at `/home/pi/Queube` - then starts the service
+You need `git`:
 
-### `make env`
+```bash
+sudo apt-get install -y git
+```
 
-Sets up the shared `.env` file with the queue name we'll use for RabbitMQ
+Then clone this repo:
 
-## What is this even for?
+```bash
+git clone https://github.com/pikesley/queube
+```
 
-The [Cube:Bit](https://4tronix.co.uk/blog/?p=1770), in common with most Raspberry Pi hardware, comes with Python drivers. I don't really like Python, so I wrote my [front-end in Ruby](https://github.com/pikesley/CubeREST) and am using the minimum amount of Python I could get away with to actually operate the lights
+And install everything:
 
-So this sets up a RabbitMQ consumer, which pulls off the data sent down from the API, reorders the list (because the pixels in the Cube:Bit are ordered strangely), then lights the lights
+```bash
+cd queube
+make setup
+```
