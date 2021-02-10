@@ -77,6 +77,9 @@ install-systemd: pi-only
 	sudo systemctl enable -f /home/pi/queube/etc/systemd/queube-worker.service
 	sudo systemctl enable -f /home/pi/queube/etc/systemd/frillsberry.service
 
+	sudo service queube-worker restart
+	sudo service frillsberry restart
+
 frillsberry:
 	bash scripts/build-frillsberry.sh
 
