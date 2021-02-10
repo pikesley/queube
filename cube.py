@@ -20,7 +20,12 @@ class Cube:
 
 
 def reorder(colours):
-    """Reorder the colours to fit the Cube::Bit's weird space-filling curve."""
+    """
+    Reorder the colours to fit the Cube::Bit's weird space-filling curve.
+
+    This is horribly hard-coded - if I ever get a cube that's not a 3x3x3, I'll
+    do it properly
+    """
     indeces = [
         0,
         3,
