@@ -8,7 +8,8 @@ Requires=queube-worker.service
 [Service]
 TimeoutStartSec=0
 Restart=always
-ExecStart=/usr/bin/docker run --rm --name frillsberry pikesley/frillsberry
+ExecStartPre=/bin/bash -c "/bin/systemctl set-environment RABBIT=$(ifconfig wlan0 | grep 'inet ' | awk '{ print $2 }')"
+ExecStart=/usr/bin/docker run --rm --env RABBIT=${RABBIT} --name frillsberry pikesley/frillsberry
 
 [Install]
 WantedBy=multi-user.target

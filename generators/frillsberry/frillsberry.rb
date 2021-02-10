@@ -6,8 +6,8 @@ require 'json'
 @cube = Intensity::Cube.new
 
 require 'bunny'
-connection = Bunny.new hostname: '192.168.68.113:5672', username: 'pi', password: 'raspberry'
-connection.start
+connection = Bunny.new hostname: "#{ENV['RABBIT']}:5672", username: 'pi', password: 'raspberry'
+  connection.start
 channel = connection.create_channel
 queue = channel.queue('queube')
 
