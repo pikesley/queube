@@ -1,11 +1,6 @@
 describe Intensity do
   context 'intensity by distance' do
     {
-      # 0 => 1,
-      # 1 => 0.5,
-      # 2 => 0.125,
-      # 3 => 0.05555555555555555,
-      # 4 => 0.03125
       0 => 1,
       1 => 1,
       2 => 1
