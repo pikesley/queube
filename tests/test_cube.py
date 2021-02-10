@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from cube import Cube
+from cube import Cube, flatten, reorder
 
 
 class TestCube(TestCase):
@@ -64,3 +64,45 @@ class TestCube(TestCase):
                 [0, 0, 0],
             ],
         )
+
+
+def test_flattening():
+    """Test it flattens the 3x3x3 lists into a single list."""
+    data = [[["foo", "bar", "baz"], [1, 2, 3], [True, False, None]]]
+    assert flatten(data) == ["foo", "bar", "baz", 1, 2, 3, True, False, None]
+
+
+def test_reorder():
+    """Test it reorders a list."""
+    data = list(
+        map(lambda x: chr(x + 32), range(27))
+    )  # the first 27 printable ASCII chars
+    assert reorder(data) == [
+        " ",
+        "#",
+        "&",
+        "'",
+        "$",
+        "!",
+        '"',
+        "%",
+        "(",
+        "1",
+        "0",
+        "/",
+        ",",
+        "-",
+        ".",
+        "+",
+        "*",
+        ")",
+        "2",
+        "5",
+        "8",
+        "9",
+        "6",
+        "3",
+        "4",
+        "7",
+        ":",
+    ]
