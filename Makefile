@@ -1,6 +1,6 @@
 PROJECT = $(shell basename $$(pwd))
 ID = pikesley/${PROJECT}
-PIHOST = 192.168.68.113
+PIHOST = queube.local
 
 default: all
 
