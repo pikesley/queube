@@ -1,5 +1,7 @@
 # Queube
 
+![The Cube](assets/cube.gif)
+
 ## Installing it
 
 From a box-fresh install of Raspberry Pi OS Lite via [NOOBS 3.5](https://www.raspberrypi.org/documentation/installation/noobs.md) (on a [Pi 4](https://www.raspberrypi.org/products/raspberry-pi-4-model-b/), which is probably important because this involves [Docker](https://en.wikipedia.org/wiki/Docker_(software))):
