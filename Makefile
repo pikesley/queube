@@ -75,9 +75,11 @@ add-rabbit-user:
 
 install-systemd: pi-only
 	sudo systemctl enable -f /home/pi/queube/etc/systemd/queube-worker.service
+	sudo systemctl enable -f /home/pi/queube/etc/systemd/control-worker.service
 	sudo systemctl enable -f /home/pi/queube/etc/systemd/frillsberry.service
 
 	sudo service queube-worker restart
+	sudo service control-worker restart
 	sudo service frillsberry restart
 
 frillsberry:

@@ -1,0 +1,18 @@
+[Unit]
+Description=Queube-Control RabbitMQ Worker
+After=rabbitmq-server
+
+[Service]
+User=pi
+WorkingDirectory=/home/pi/queube/
+ExecStartPre=/bin/bash -c '(while ! nc -z -v -w1 localhost 5672 > /dev/null; do echo "Waiting for port 5672 to open..."; sleep 2; done); sleep 2'
+ExecStart=/bin/bash -lc 'sudo python control_worker.py'
+Restart=always
+StandardInput=null
+StandardOutput=syslog
+StandardError=syslog
+KillMode=mixed
+TimeoutStopSec=5
+
+[Install]
+WantedBy=multi-user.target
