@@ -7,3 +7,4 @@ pytest-random-order
 pytest-cov
 ipdb
 pylama
+Flask-API

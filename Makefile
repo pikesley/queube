@@ -17,6 +17,7 @@ run: laptop-only
 		--name ${PROJECT} \
 		--volume $(shell pwd):/opt/${PROJECT} \
 		--volume ${HOME}/.ssh:/root/.ssh \
+		-p 127.0.0.1:5000:5000/tcp \
 		--rm \
 		${ID} bash
 
@@ -76,10 +77,12 @@ add-rabbit-user:
 install-systemd: pi-only
 	sudo systemctl enable -f /home/pi/queube/etc/systemd/queube-worker.service
 	sudo systemctl enable -f /home/pi/queube/etc/systemd/control-worker.service
+	sudo systemctl enable -f /home/pi/queube/etc/systemd/webserver.service
 	sudo systemctl enable -f /home/pi/queube/etc/systemd/frillsberry.service
 
 	sudo service queube-worker restart
 	sudo service control-worker restart
+	sudo service webserver restart
 	sudo service frillsberry restart
 
 frillsberry:
