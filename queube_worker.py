@@ -18,6 +18,10 @@ def callback(_, __, ___, body):
     try:
         data = json.loads(body.decode("utf-8"))
         cube.display(data["data"])
+
+    except KeyError:
+        print("Your data is bad")
+
     except TypeError:
         print("Your data is bad")
 
