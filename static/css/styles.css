@@ -1,0 +1,12 @@
+@import url("https://fonts.googleapis.com/css2?family=Londrina+Solid");
+body {
+  font-family: "Londrina Solid";
+  text-align: center; }
+
+h1 {
+  font-size: 3em; }
+
+button {
+  max-width: 100px; }
+
+/*# sourceMappingURL=styles.css.map */

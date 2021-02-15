@@ -18,6 +18,7 @@ run: laptop-only
 		--volume $(shell pwd):/opt/${PROJECT} \
 		--volume ${HOME}/.ssh:/root/.ssh \
 		-p 127.0.0.1:5000:5000/tcp \
+		-p 127.0.0.1:8080:80/tcp \
 		--rm \
 		${ID} bash
 
@@ -56,9 +57,13 @@ dev-install: docker-only
 push-code: docker-only clean
 	rsync -av /opt/${PROJECT} pi@${PIHOST}:
 
+sass: docker-only
+	rm -f static/css/styles.css
+	sass static/css/styles.scss static/css/styles.css
+
 # Pi targets
 
-setup: pi-only set-python apt-installs add-rabbit-user install frillsberry install-systemd
+setup: pi-only set-python apt-installs add-rabbit-user install frillsberry install-systemd virtualhost
 
 install: pi-only
 	sudo python -m pip install -r requirements.txt
@@ -69,7 +74,7 @@ set-python: pi-only
 
 apt-installs: pi-only
 	sudo apt-get update
-	sudo apt-get install -y rabbitmq-server docker.io python3-pip
+	sudo apt-get install -y rabbitmq-server docker.io python3-pip nginx
 
 add-rabbit-user:
 	bash scripts/add-rabbit-user.sh
@@ -84,6 +89,10 @@ install-systemd: pi-only
 	sudo service control-worker restart
 	sudo service webserver restart
 	sudo service frillsberry restart
+
+virtualhost:
+	sudo cp etc/nginx/sites-available/default /etc/nginx/sites-available/default
+	sudo service nginx restart
 
 frillsberry:
 	bash scripts/build-frillsberry.sh
