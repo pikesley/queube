@@ -6,11 +6,6 @@ from flask import request
 from flask_api import FlaskAPI
 
 app = FlaskAPI(__name__)
-app.connection = pika.BlockingConnection(pika.ConnectionParameters("localhost"))
-
-QUEUE = "control"
-app.channel = app.connection.channel()
-app.channel.queue_declare(queue=QUEUE)
 
 
 @app.route("/", methods=["GET"])
@@ -29,8 +24,7 @@ def control_lights():
     if "state" not in app.data:
         return {"error": "Bad data"}, 422
 
-    print(app.data)
-    app.channel.basic_publish(exchange="", routing_key=QUEUE, body=json.dumps(app.data))
+    enqueue_control_job(app.data)
     return {"status": "OK"}, 200
 
 
@@ -44,6 +38,14 @@ def get_lights():
         return {"lights": "on"}, 200
 
     return {"lights": "off"}, 200
+
+
+def enqueue_control_job(data):
+    connection = pika.BlockingConnection(pika.ConnectionParameters("localhost"))
+    QUEUE = "control"
+    channel = connection.channel()
+    channel.queue_declare(queue=QUEUE)
+    channel.basic_publish(exchange="", routing_key=QUEUE, body=json.dumps(data))
 
 
 if __name__ == "__main__":
