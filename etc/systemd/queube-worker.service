@@ -9,8 +9,8 @@ ExecStartPre=/bin/bash -c '(while ! nc -z -v -w1 localhost 6379 > /dev/null; do 
 ExecStart=/bin/bash -lc 'sudo python worker.py'
 Restart=always
 StandardInput=null
-StandardOutput=syslog
-StandardError=syslog
+StandardOutput=file:/var/log/queube-worker/worker.log
+StandardError=file:/var/log/queube-worker/worker.err
 KillMode=mixed
 TimeoutStopSec=5
 

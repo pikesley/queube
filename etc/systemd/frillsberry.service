@@ -10,6 +10,8 @@ TimeoutStartSec=0
 Restart=always
 ExecStartPre=/bin/bash -c "/bin/systemctl set-environment REDIS=$(ifconfig docker0 | grep 'inet ' | awk '{ print $2 }')"
 ExecStart=/usr/bin/docker run --rm --env REDIS=${REDIS} --name frillsberry pikesley/frillsberry
+StandardOutput=file:/var/log/frillsberry/frillsberry.log
+StandardError=file:/var/log/frillsberry/frillsberry.err
 
 [Install]
 WantedBy=multi-user.target

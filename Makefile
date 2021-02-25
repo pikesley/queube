@@ -74,7 +74,14 @@ config-redis:
 	sudo cat /etc/redis/redis.conf | sed "s/bind 127.0.0.1 ::1/#bind 127.0.0.1 ::1/" | sed "s/protected-mode yes/protected-mode no/" > /tmp/redis.conf
 	sudo mv /tmp/redis.conf /etc/redis/redis.conf
 
-install-systemd: pi-only
+prepare-logs:
+	sudo mkdir -p /var/log/queube-worker/
+	sudo chown pi /var/log/queube-worker/
+
+	sudo mkdir -p /var/log/frillsberry/
+	sudo chown pi /var/log/frillsberry/
+
+install-systemd: pi-only prepare-logs
 	sudo systemctl enable -f /home/pi/queube/etc/systemd/queube-worker.service
 	sudo systemctl enable -f /home/pi/queube/etc/systemd/frillsberry.service
 
