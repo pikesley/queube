@@ -2,14 +2,10 @@ require_relative 'intensity'
 require_relative 'shooter'
 require_relative 'sphere'
 require 'json'
+require 'redis'
 
+@redis = Redis.new(url: "redis://#{ENV['REDIS']}")
 @cube = Intensity::Cube.new
-
-require 'bunny'
-connection = Bunny.new hostname: "#{ENV['RABBIT']}:5672", username: 'pi', password: 'raspberry'
-  connection.start
-channel = connection.create_channel
-queue = channel.queue('queube')
 
 loop do
   @shooter = Intensity::Shooter.new Intensity::Shooter.starting_point, Intensity::Shooter.waypoint, Intensity::Shooter.step_value
@@ -17,7 +13,7 @@ loop do
 
   @shooter.each do |s|
     @cube.illuminate_location s.state, @colour
-    channel.default_exchange.publish({data: @cube}.to_json, routing_key: queue.name)
+    @redis.rpush "lights", {data: @cube}.to_json
     sleep 0.05
   end
 end

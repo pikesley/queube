@@ -1,11 +1,11 @@
 [Unit]
-Description=Queube RabbitMQ Worker
-After=rabbitmq-server
+Description=Queube Worker
+After=redis-server
 
 [Service]
 User=pi
 WorkingDirectory=/home/pi/queube/
-ExecStartPre=/bin/bash -c '(while ! nc -z -v -w1 localhost 5672 > /dev/null; do echo "Waiting for port 5672 to open..."; sleep 2; done); sleep 2'
+ExecStartPre=/bin/bash -c '(while ! nc -z -v -w1 localhost 6379 > /dev/null; do echo "Waiting for port 6379 to open..."; sleep 2; done); sleep 2'
 ExecStart=/bin/bash -lc 'sudo python worker.py'
 Restart=always
 StandardInput=null

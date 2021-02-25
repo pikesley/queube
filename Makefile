@@ -57,7 +57,7 @@ push-code: docker-only clean
 
 # Pi targets
 
-setup: pi-only set-python apt-installs add-rabbit-user install frillsberry install-systemd
+setup: pi-only set-python apt-installs config-redis install frillsberry install-systemd
 
 install: pi-only
 	sudo python -m pip install -r requirements.txt
@@ -68,15 +68,17 @@ set-python: pi-only
 
 apt-installs: pi-only
 	sudo apt-get update
-	sudo apt-get install -y rabbitmq-server docker.io python3-pip
+	sudo apt-get install -y redis docker.io python3-pip
 
-add-rabbit-user:
-	bash scripts/add-rabbit-user.sh
+config-redis:
+	sudo cat /etc/redis/redis.conf | sed "s/bind 127.0.0.1 ::1/#bind 127.0.0.1 ::1/" | sed "s/protected-mode yes/protected-mode no/" > /tmp/redis.conf
+	sudo mv /tmp/redis.conf /etc/redis/redis.conf
 
 install-systemd: pi-only
 	sudo systemctl enable -f /home/pi/queube/etc/systemd/queube-worker.service
 	sudo systemctl enable -f /home/pi/queube/etc/systemd/frillsberry.service
 
+	sudo service redis-server restart
 	sudo service queube-worker restart
 	sudo service frillsberry restart
 

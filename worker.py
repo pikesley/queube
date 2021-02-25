@@ -1,28 +1,19 @@
 import json
 
-import pika
+import redis
 
 from cube import Cube
 
-QUEUE = "queube"
+r = redis.Redis(host="192.168.68.105")
 
 cube = Cube()
 
-connection = pika.BlockingConnection(pika.ConnectionParameters("localhost"))
-channel = connection.channel()
-channel.queue_declare(queue=QUEUE)
-
-
-def callback(_, __, ___, body):
-    """Do something with the data."""
-    try:
-        data = json.loads(body.decode("utf-8"))
-        cube.display(data["data"])
-    except TypeError:
-        print("Your data is bad")
-
-
-channel.basic_consume(QUEUE, callback)
-
-print(" [*] Waiting for jobs")
-channel.start_consuming()
+while True:
+    data = r.lpop("lights")
+    if data:
+        data = data.decode("utf-8")
+        data = json.loads(data)
+        try:
+            cube.display(data["data"])
+        except TypeError:
+            print("Your data is bad")
