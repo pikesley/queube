@@ -6,6 +6,12 @@ require 'redis'
 
 @redis = Redis.new(url: "redis://#{ENV['REDIS']}")
 @cube = Intensity::Cube.new
+@terminate = false
+
+Signal.trap('TERM') do
+  puts "Caught signal `TERM`"
+  @terminate = true
+end
 
 loop do
   @shooter = Intensity::Shooter.new Intensity::Shooter.starting_point, Intensity::Shooter.waypoint, Intensity::Shooter.step_value
@@ -15,5 +21,8 @@ loop do
     @cube.illuminate_location s.state, @colour
     @redis.rpush "lights", {data: @cube}.to_json
     sleep 0.05
+  end
+  if @terminate
+    break
   end
 end
