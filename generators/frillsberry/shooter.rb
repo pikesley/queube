@@ -40,7 +40,7 @@ module Intensity
     def Shooter.starting_point
       s = []
       3.times do
-        x = Random.rand(3) + 2
+        x = Random.rand(3) + 3
         x = 0 - x if Random.rand(2) == 1
         s.push x
       end
@@ -52,7 +52,7 @@ module Intensity
     end
 
     def Shooter.step_value
-      Random.rand(8) + 16
+      Random.rand(8) + 32
     end
 
     def Shooter.colour
