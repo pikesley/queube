@@ -5,8 +5,21 @@ After=redis-server
 [Service]
 User=pi
 WorkingDirectory=/home/pi/queube/
-ExecStartPre=/bin/bash -c '(while ! nc -z -v -w1 localhost 6379 > /dev/null; do echo "Waiting for port 6379 to open..."; sleep 2; done); sleep 2'
-ExecStart=/bin/bash -lc 'sudo python worker.py'
+
+ExecStartPre=/bin/bash -c "\
+    (while ! nc -z -v -w1 localhost 6379 > /dev/null; \
+    do \
+        echo 'Waiting for port 6379 to open...'; \
+        sleep 2; \
+    done); \
+
+    sleep 2 ; \
+
+    sudo /bin/systemctl set-environment \
+        REDIS=$(ifconfig wlan0 | grep 'inet ' | awk '{ print $2 }')"
+
+ExecStart=/bin/bash -lc 'sudo REDIS=${REDIS} python worker.py'
+
 Restart=always
 StandardInput=null
 StandardOutput=file:/var/log/queube-worker/worker.log
