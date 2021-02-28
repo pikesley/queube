@@ -65,7 +65,7 @@ module Intensity
       end
 
       it 'generates step values' do
-        expect(Shooter.step_value).to be_between 8, 24
+        expect(Shooter.step_value).to be_between 8, 40
       end
     end
 

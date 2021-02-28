@@ -29,8 +29,6 @@ sudo raspi-config nonint do_hostname queube
 sudo reboot
 ```
 
-(if you're going to do this, do it first, because Rabbit's auth is somehow tied to the hostname)
-
 You need `git`:
 
 ```bash
@@ -97,7 +95,7 @@ to run the tests
 
 ## There's a queue
 
-There's also a [RabbitMQ](https://www.rabbitmq.com/) [worker](worker.py) which picks JSON like this:
+There's also a [Redis](https://redis.io/) LIFO queue , with a [worker](worker.py) which picks JSON like this:
 
 ```json
 {
