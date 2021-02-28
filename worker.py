@@ -1,10 +1,13 @@
 import json
+from time import sleep
+import os
 
 import redis
 
 from cube import Cube
 
-r = redis.Redis(host="192.168.68.105")
+# r = redis.Redis(host="192.168.68.105")  # get this from env
+r = redis.Redis(host=os.environ["REDIS"])
 
 cube = Cube()
 
@@ -17,3 +20,9 @@ while True:
             cube.display(data["data"])
         except TypeError:
             print("Your data is bad")
+
+        finally:
+            sleep(0.05)  # put this in config
+
+    else:
+        sleep(1)
