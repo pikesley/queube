@@ -8,3 +8,6 @@ pytest-cov
 ipdb
 pylama
 redis
+
+Flask
+Flask_SocketIO
