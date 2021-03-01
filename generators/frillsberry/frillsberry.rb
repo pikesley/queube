@@ -26,3 +26,6 @@ loop do
     break
   end
 end
+
+sleep 1
+@redis.flushall

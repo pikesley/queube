@@ -1,6 +1,6 @@
 import json
-from time import sleep
 import os
+from time import sleep
 
 import redis
 
