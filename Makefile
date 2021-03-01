@@ -84,10 +84,12 @@ prepare-logs:
 install-systemd: pi-only prepare-logs
 	sudo systemctl enable -f /home/pi/queube/etc/systemd/queube-worker.service
 	sudo systemctl enable -f /home/pi/queube/etc/systemd/frillsberry.service
+	sudo systemctl enable -f /home/pi/queube/etc/systemd/webserver.service
 
 	sudo service redis-server restart
 	sudo service queube-worker restart
 	sudo service frillsberry restart
+	sudo service webserver restart
 
 frillsberry:
 	bash scripts/build-frillsberry.sh

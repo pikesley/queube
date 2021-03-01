@@ -1,0 +1,17 @@
+[Unit]
+Description=Queube Webserver
+After=queube-worker
+
+[Service]
+User=pi
+WorkingDirectory=/home/pi/queube/
+ExecStart=/bin/bash -lc 'python webserver.py'
+Restart=always
+StandardInput=null
+StandardOutput=syslog
+StandardError=syslog
+KillMode=mixed
+TimeoutStopSec=5
+
+[Install]
+WantedBy=multi-user.target
