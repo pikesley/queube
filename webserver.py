@@ -36,7 +36,7 @@ def switch_lights(desired_state):
     }
 
     params = lookups[desired_state["data"]]
-    subprocess.Popen(["service", "frillsberry", params["command-arg"]])
+    subprocess.Popen(["sudo", "service", "frillsberry", params["command-arg"]])
 
     global thread
     with thread_lock:
