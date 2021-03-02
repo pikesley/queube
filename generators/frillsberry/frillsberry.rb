@@ -22,6 +22,9 @@ loop do
     @redis.rpush "lights", {data: @cube}.to_json
     sleep 0.05
   end
+
+  @redis.rpush "lights", {data: "EOF"}.to_json
+
   if @terminate
     break
   end
