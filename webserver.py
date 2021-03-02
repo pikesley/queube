@@ -1,56 +1,62 @@
 import subprocess
 from threading import Lock
 
-from flask import Flask, render_template
-from flask_socketio import SocketIO, emit
+from flask import Flask
+from flask_cors import CORS
+from flask_socketio import SocketIO
 
-async_mode = None
+ASYNC_MODE = None
 
 app = Flask(__name__)
-socketio = SocketIO(app, async_mode=async_mode)
-thread = None
+CORS(app)
+socketio = SocketIO(app, async_mode=ASYNC_MODE, cors_allowed_origins="*")
+app.thread = None
 thread_lock = Lock()
 
 
-def background_thread(desired_state):
+def background_thread(params):
+    """Monitor and report the state of a process."""
     in_desired_state = False
-    count = 0
     while not in_desired_state:
-        state = lights_state()
-        in_desired_state = state == desired_state
+        state = service_state(params["service"])
+        in_desired_state = state == params["expectation"]
+        socketio.emit("response", {"data": state})
         socketio.sleep(0.5)
-        count += 1
-        socketio.emit("response", {"data": f"{state}, {count}"})
-
-
-@app.route("/")
-def index():
-    return render_template("index.html", async_mode=socketio.async_mode)
 
 
 @socketio.event
 def switch_lights(desired_state):
+    """Switch the lights on or off."""
     lookups = {
-        "on": {"command-arg": "start", "expectation": "active"},
-        "off": {"command-arg": "stop", "expectation": "inactive"},
+        "on": {
+            "service": "frillsberry",
+            "command-arg": "start",
+            "expectation": "active",
+        },
+        "off": {
+            "service": "queube-worker",
+            "command-arg": "stop",
+            "expectation": "inactive",
+        },
     }
 
     params = lookups[desired_state["data"]]
-    subprocess.Popen(["sudo", "service", "frillsberry", params["command-arg"]])
+    subprocess.Popen(["sudo", "service", params["service"], params["command-arg"]])
 
-    global thread
     with thread_lock:
-        thread = socketio.start_background_task(
-            background_thread(params["expectation"])
-        )
+        app.thread = socketio.start_background_task(background_thread(params))
+
 
 @socketio.event
 def connect():
-    socketio.emit("response", {"data": lights_state()})
+    """Make first connection to the client."""
+    socketio.emit("response", {"data": service_state("queube-worker")})
 
-def lights_state():
-    check = subprocess.run(
-        "systemctl is-active frillsberry".split(), capture_output=True
+
+def service_state(service):
+    """Report the status of a systemd service."""
+    check = subprocess.run(  # pylint:disable=W1510
+        ["systemctl", "is-active", service], capture_output=True
     )
     return check.stdout.decode("utf-8").strip()
 

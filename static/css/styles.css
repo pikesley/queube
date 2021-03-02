@@ -1,0 +1,17 @@
+@import url("https://fonts.googleapis.com/css2?family=Londrina+Solid");
+body {
+  font-family: "Londrina Solid";
+  text-align: center; }
+
+.active {
+  background-color: green; }
+
+.inactive {
+  background-color: red; }
+
+.deactivating,
+.activating,
+.changing {
+  background-color: orange; }
+
+/*# sourceMappingURL=styles.css.map */

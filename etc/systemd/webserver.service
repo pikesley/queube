@@ -8,8 +8,8 @@ WorkingDirectory=/home/pi/queube/
 ExecStart=/bin/bash -lc 'python webserver.py'
 Restart=always
 StandardInput=null
-StandardOutput=syslog
-StandardError=syslog
+StandardOutput=file:/var/log/webserver/webserver.log
+StandardError=file:/var/log/webserver/webserver.err
 KillMode=mixed
 TimeoutStopSec=5
 

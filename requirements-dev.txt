@@ -11,3 +11,4 @@ redis
 
 Flask
 Flask_SocketIO
+flask_cors

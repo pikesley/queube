@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <title>Queube</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js" integrity="sha512-aMGMvNYu8Ue4G+fHa359jcPb1u+ytAF+P2SCb+PxrjCdO3n3ZTxJ30zuH39rimUggmTwmh2u7wvQsDTHESnmfQ==" crossorigin="anonymous"></script>
+
+    <script>
+        var socket
+        var currentState
+        $(document).ready(function() {
+            socket = io(`http://${location.hostname}:5000`);
+            socket.on('response', function(msg) {
+                currentState = msg.data
+                $('#status').removeClass()
+                $('#status').addClass(currentState)
+                $('#status').text(currentState)
+            })
+        });
+
+        function switchLights(disposition) {
+            socket.emit('switch_lights', {
+                data: disposition
+            })
+            return false
+        }
+    </script>
+
+    <link rel="stylesheet" href="css/styles.css">
+
+</head>
+
+<body>
+    <button id="on" onclick="switchLights('on')">on</button>
+    <button id="off" onclick="switchLights('off')">off</button>
+    <div id="status"></div>
+</body>
+
+</html>
