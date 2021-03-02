@@ -7,21 +7,24 @@ import redis
 
 from cube import Cube
 
-run = True
+RUN = True
 
 
-def handle_stop_signals(signum, frame):
-    global run
-    run = False
+def handle_stop_signals(_, __):
+    """Intercept SIGTERM and shutdown gracefully."""
+    # https://stackoverflow.com/a/41753517
+    global RUN  # pylint:disable=W0603
+    RUN = False
 
 
 signal.signal(signal.SIGTERM, handle_stop_signals)
 
 
-def do_lights(stack):
-    for item in reversed(stack):
+def do_lights(colours):
+    """Actually light the lights."""
+    for frame in reversed(colours):
         try:
-            cube.display(item)
+            cube.display(frame)
         except TypeError:
             print("Your data is bad")
         finally:
@@ -33,7 +36,7 @@ r = redis.Redis(host=os.environ["REDIS"])
 cube = Cube()
 
 stack = []
-while run:
+while RUN:
     data = r.lpop("lights")
 
     if data:
@@ -45,8 +48,8 @@ while run:
             else:
                 stack.append(item)
 
-        except Exception:
-            pass
+        except json.decoder.JSONDecodeError:
+            print("Your data is bad")
 
     else:
         sleep(1)
