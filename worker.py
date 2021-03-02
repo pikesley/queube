@@ -1,12 +1,23 @@
 import json
 import os
+import signal
 from time import sleep
 
 import redis
 
 from cube import Cube
 
-# r = redis.Redis(host="192.168.68.105")  # get this from env
+run = True
+
+
+def handle_stop_signals(signum, frame):
+    global run
+    run = False
+
+
+signal.signal(signal.SIGTERM, handle_stop_signals)
+
+
 def do_lights(stack):
     for item in reversed(stack):
         try:
@@ -21,8 +32,8 @@ r = redis.Redis(host=os.environ["REDIS"])
 
 cube = Cube()
 
-while True:
 stack = []
+while run:
     data = r.lpop("lights")
 
     if data:
@@ -40,3 +51,4 @@ stack = []
     else:
         sleep(1)
 
+r.flushall()
