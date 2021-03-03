@@ -1,17 +1,25 @@
 @import url("https://fonts.googleapis.com/css2?family=Londrina+Solid");
 body {
   font-family: "Londrina Solid";
+  background: white;
   text-align: center; }
 
+h1 {
+  color: black;
+  font-size: 6em; }
+
 .active {
-  background-color: green; }
+  fill: #5fae57; }
 
 .inactive {
-  background-color: red; }
+  fill: #a7383d; }
 
 .deactivating,
-.activating,
-.changing {
-  background-color: orange; }
+.activating {
+  fill: #d4b56a; }
+
+#switch {
+  width: 70%;
+  filter: drop-shadow(10px 10px 10px rgba(84, 0, 4, 0.6)); }
 
 /*# sourceMappingURL=styles.css.map */

@@ -1,19 +1,37 @@
 @import url("https://fonts.googleapis.com/css2?family=Londrina+Solid");
 $principal-font: "Londrina Solid";
+
+@import "palettes/default";
+$red: $rgba-primary-0;
+$green: $rgba-complement-2;
+$orange: $rgba-secondary-1-2;
+$shadow: $rgba-primary-4;
+
 body {
     font-family: $principal-font;
+    background: white;
     text-align: center;
 }
 
+h1 {
+    color: black;
+    font-size: 6em;
+}
+
 .active {
-    background-color: green;
+    fill: $green;
 }
 
 .inactive {
-    background-color: red;
+    fill: $red;
 }
 
 .deactivating,
 .activating {
-    background-color: orange;
+    fill: $orange;
+}
+
+#switch {
+    width: 70%;
+    filter: drop-shadow(10px 10px 10px scale-color($shadow, $alpha: -40%));
 }
