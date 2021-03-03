@@ -20,7 +20,7 @@ def background_thread(params):
     while not in_desired_state:
         state = service_state(params["service"])
         in_desired_state = state == params["expectation"]
-        socketio.emit("response", {"data": state})
+        socketio.emit("state", {"data": state})
         socketio.sleep(0.5)
 
 
@@ -28,29 +28,34 @@ def background_thread(params):
 def switch_lights(desired_state):
     """Switch the lights on or off."""
     lookups = {
-        "on": {
+        "active": {
             "service": "frillsberry",
             "command-arg": "start",
+            "phase": "activating",
             "expectation": "active",
         },
-        "off": {
+        "inactive": {
             "service": "queube-worker",
             "command-arg": "stop",
+            "phase": "deactivating",
             "expectation": "inactive",
         },
     }
 
     params = lookups[desired_state["data"]]
-    subprocess.Popen(["sudo", "service", params["service"], params["command-arg"]])
 
+    socketio.emit("phase", {"data": params["phase"]})
+    subprocess.Popen(["sudo", "service", params["service"], params["command-arg"]])
     with thread_lock:
         app.thread = socketio.start_background_task(background_thread(params))
+
+    socketio.emit("phase", {"data": params["expectation"]})
 
 
 @socketio.event
 def connect():
     """Make first connection to the client."""
-    socketio.emit("response", {"data": service_state("queube-worker")})
+    socketio.emit("phase", {"data": service_state("queube-worker")})
 
 
 def service_state(service):
