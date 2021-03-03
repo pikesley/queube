@@ -63,6 +63,7 @@ sass: docker-only
 # Pi targets
 
 setup: pi-only set-python apt-installs config-redis virtualhost install frillsberry install-systemd
+	sudo reboot
 
 install: pi-only
 	sudo python -m pip install -r requirements.txt
