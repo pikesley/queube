@@ -22,7 +22,7 @@ signal.signal(signal.SIGTERM, handle_stop_signals)
 
 def do_lights(colours):
     """Actually light the lights."""
-    for frame in reversed(colours):
+    for frame in colours:
         try:
             cube.display(frame)
         except TypeError:
@@ -37,16 +37,12 @@ cube = Cube()
 
 stack = []
 while RUN:
-    data = r.lpop("lights")
-
+    data = r.lpop("queube")
     if data:
         try:
-            item = json.loads(data.decode("utf-8"))["data"]
-            if item == "EOF":
-                do_lights(stack)
-                stack = []
-            else:
-                stack.append(item)
+            payload = json.loads(data.decode("utf-8"))
+            r.set("current-colour", json.dumps(payload["colour"]))
+            do_lights(payload["states"])
 
         except json.decoder.JSONDecodeError:
             print("Your data is bad")
