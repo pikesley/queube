@@ -5,6 +5,10 @@ After=queube-worker
 [Service]
 User=pi
 WorkingDirectory=/home/pi/queube/
+ExecStartPre=/bin/bash -c "\
+    sudo /bin/systemctl set-environment \
+        REDIS=$(ifconfig wlan0 | grep 'inet ' | awk '{ print $2 }')"
+
 ExecStart=/bin/bash -lc 'python webserver.py'
 Restart=always
 StandardInput=null
