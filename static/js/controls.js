@@ -17,6 +17,12 @@ $(document).ready(function () {
         $('#switch path').attr('d', paths[currentPhase])
         $('#switch').removeClass().addClass(currentPhase)
     })
+
+    // socket.on('colour', function (msg) {
+    //     console.log(msg.data)
+    //     $('body').css('background', `rgb(${msg.data})`)
+    //     $('h1').text('background', msg.data)
+    // })
 });
 
 function switchLights() {

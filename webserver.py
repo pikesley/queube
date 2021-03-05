@@ -1,6 +1,9 @@
+import json
+import os
 import subprocess
 from threading import Lock
 
+import redis
 from flask import Flask
 from flask_cors import CORS
 from flask_socketio import SocketIO
@@ -11,7 +14,10 @@ app = Flask(__name__)
 CORS(app)
 socketio = SocketIO(app, async_mode=ASYNC_MODE, cors_allowed_origins="*")
 app.thread = None
+app.other_thread = None
 thread_lock = Lock()
+other_thread_lock = Lock()
+app.redis = redis.Redis(host=os.environ["REDIS"])
 
 
 def background_thread(params):
@@ -21,6 +27,13 @@ def background_thread(params):
         state = service_state(params["service"])
         in_desired_state = state == params["expectation"]
         socketio.emit("state", {"data": state})
+        socketio.sleep(0.5)
+
+
+def background_colour_thread():
+    """Send the background colour."""
+    while True:
+        socketio.emit("colour", {"data": json.loads(app.redis.get("current-colour"))})
         socketio.sleep(0.5)
 
 
@@ -56,6 +69,8 @@ def switch_lights(desired_state):
 def connect():
     """Make first connection to the client."""
     socketio.emit("phase", {"data": service_state("queube-worker")})
+    # with other_thread_lock:
+    #     app.other_thread = socketio.start_background_task(background_colour_thread)
 
 
 def service_state(service):
