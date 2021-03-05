@@ -20,6 +20,7 @@ h1 {
 
 #switch {
   width: 70%;
-  filter: drop-shadow(10px 10px 10px rgba(84, 0, 4, 0.6)); }
+  filter: drop-shadow(10px 10px 10px rgba(84, 0, 4, 0.6));
+  cursor: pointer; }
 
 /*# sourceMappingURL=styles.css.map */
