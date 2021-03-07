@@ -2,3 +2,7 @@ rpi_ws281x
 adafruit-circuitpython-neopixel
 RPi.GPIO
 redis
+
+Flask
+Flask_SocketIO
+flask-cors

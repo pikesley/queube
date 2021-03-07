@@ -5,7 +5,6 @@ require 'json'
 require 'redis'
 
 @redis = Redis.new(url: "redis://#{ENV['REDIS']}")
-@cube = Intensity::Cube.new
 @terminate = false
 
 Signal.trap('TERM') do
@@ -14,15 +13,29 @@ Signal.trap('TERM') do
 end
 
 loop do
-  @shooter = Intensity::Shooter.new Intensity::Shooter.starting_point, Intensity::Shooter.waypoint, Intensity::Shooter.step_value
-  @colour = Intensity::Shooter.colour
+  if @redis.llen("queube").to_i < 2 then
+    @shooter = Intensity::Shooter.new Intensity::Shooter.starting_point, Intensity::Shooter.waypoint, Intensity::Shooter.step_value
+    @colour = Intensity::Shooter.colour
 
-  @shooter.each do |s|
-    @cube.illuminate_location s.state, @colour
-    @redis.rpush "lights", {data: @cube}.to_json
-    sleep 0.05
+    @payload = {
+      colour: @colour,
+      states: []
+    }
+
+    @shooter.each do |s|
+      @payload[:states].append Intensity::Cube.new
+      @payload[:states].last.illuminate_location s.state, @colour
+    end
+    @redis.rpush "queube", @payload.to_json
+
+  else
+    sleep 1
   end
+
   if @terminate
     break
   end
 end
+
+# sleep 1
+# @redis.flushall

@@ -1,0 +1,42 @@
+@import url("https://fonts.googleapis.com/css2?family=Quicksand");
+body {
+  font-family: "Quicksand";
+  background: black;
+  text-align: center; }
+
+h1 {
+  color: white;
+  font-size: 6em;
+  font-weight: 700; }
+
+.active {
+  fill: green; }
+  .active .outer-ring {
+    fill: #004d00; }
+  .active .inner-part {
+    fill: black; }
+
+.inactive {
+  fill: red; }
+  .inactive .outer-ring {
+    fill: #cc0000; }
+  .inactive .inner-part {
+    fill: black; }
+
+.deactivating,
+.activating {
+  fill: orange; }
+  .deactivating .outer-ring,
+  .activating .outer-ring {
+    fill: #cc8400; }
+  .deactivating .inner-part,
+  .activating .inner-part {
+    fill: black; }
+
+#control-button {
+  width: 70%;
+  filter: drop-shadow(10px 10px 10px rgba(0, 0, 0, 0.6)); }
+  #control-button #button {
+    cursor: pointer; }
+
+/*# sourceMappingURL=styles.css.map */

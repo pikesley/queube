@@ -1,0 +1,58 @@
+@import url("https://fonts.googleapis.com/css2?family=Quicksand");
+$principal-font: "Quicksand";
+
+@import "palettes/default";
+$red: $rgba-primary-0;
+$green: $rgba-complement-2;
+$orange: $rgba-secondary-1-2;
+$shadow: black;
+
+$active: green;
+$inactive: red;
+$transitioning: orange;
+
+@mixin control($colour) {
+    fill: $colour;
+
+    .outer-ring {
+        fill: darken($colour, 10%);
+    }
+
+    .inner-part {
+        fill: black;
+    }
+}
+
+body {
+    font-family: $principal-font;
+    background: black;
+    text-align: center;
+}
+
+h1 {
+    color: white;
+    font-size: 6em;
+    font-weight: 700;
+}
+
+.active {
+    @include control($active);
+}
+
+.inactive {
+    @include control($inactive);
+}
+
+.deactivating,
+.activating {
+    @include control($transitioning);
+}
+
+#control-button {
+    width: 70%;
+    filter: drop-shadow(10px 10px 10px scale-color($shadow, $alpha: -40%));
+
+    #button {
+        cursor: pointer;
+    }
+}

@@ -17,6 +17,7 @@ run: laptop-only
 		--name ${PROJECT} \
 		--volume $(shell pwd):/opt/${PROJECT} \
 		--volume ${HOME}/.ssh:/root/.ssh \
+		-p 127.0.0.1:8080:80/tcp \
 		--rm \
 		${ID} bash
 
@@ -50,14 +51,19 @@ clean: docker-only
 	@find . -depth -name ".coverage.*" -exec rm {} \;
 
 dev-install: docker-only
-	 python -m pip install -r requirements-dev.txt
+	python -m pip install -r requirements-dev.txt
 
 push-code: docker-only clean
 	rsync -av /opt/${PROJECT} pi@${PIHOST}:
 
+sass: docker-only
+	rm -f static/css/styles.css
+	sass static/css/styles.scss static/css/styles.css
+
 # Pi targets
 
-setup: pi-only set-python apt-installs config-redis install frillsberry install-systemd
+setup: pi-only set-python apt-installs config-redis virtualhost install frillsberry install-systemd
+	sudo reboot
 
 install: pi-only
 	sudo python -m pip install -r requirements.txt
@@ -68,28 +74,37 @@ set-python: pi-only
 
 apt-installs: pi-only
 	sudo apt-get update
-	sudo apt-get install -y redis docker.io python3-pip
+	sudo apt-get install -y redis docker.io python3-pip nginx
 
-config-redis:
+config-redis: pi-only
 	sudo cat /etc/redis/redis.conf | sed "s/bind 127.0.0.1 ::1/#bind 127.0.0.1 ::1/" | sed "s/protected-mode yes/protected-mode no/" > /tmp/redis.conf
 	sudo mv /tmp/redis.conf /etc/redis/redis.conf
 
-prepare-logs:
+virtualhost: pi-only
+	sudo cp etc/nginx/sites-available/default /etc/nginx/sites-available/default
+	sudo service nginx restart
+
+prepare-logs: pi-only
 	sudo mkdir -p /var/log/queube-worker/
 	sudo chown pi /var/log/queube-worker/
 
 	sudo mkdir -p /var/log/frillsberry/
 	sudo chown pi /var/log/frillsberry/
 
+	sudo mkdir -p /var/log/webserver/
+	sudo chown pi /var/log/webserver/
+
 install-systemd: pi-only prepare-logs
 	sudo systemctl enable -f /home/pi/queube/etc/systemd/queube-worker.service
 	sudo systemctl enable -f /home/pi/queube/etc/systemd/frillsberry.service
+	sudo systemctl enable -f /home/pi/queube/etc/systemd/webserver.service
 
 	sudo service redis-server restart
 	sudo service queube-worker restart
 	sudo service frillsberry restart
+	sudo service webserver restart
 
-frillsberry:
+frillsberry: pi-only
 	bash scripts/build-frillsberry.sh
 
 # Guardrails
