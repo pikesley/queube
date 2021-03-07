@@ -13,14 +13,18 @@ ASYNC_MODE = None
 app = Flask(__name__)
 CORS(app)
 socketio = SocketIO(app, async_mode=ASYNC_MODE, cors_allowed_origins="*")
-app.thread = None
-app.other_thread = None
-thread_lock = Lock()
-other_thread_lock = Lock()
+
+app.state_thread = None
+app.state_thread_lock = Lock()
+
+app.colour_thread = None
+app.colour_thread_lock = Lock()
+
 app.redis = redis.Redis(host=os.environ["REDIS"])
+app.current_colour = None
 
 
-def background_thread(params):
+def state_thread(params):
     """Monitor and report the state of a process."""
     in_desired_state = False
     while not in_desired_state:
@@ -30,11 +34,18 @@ def background_thread(params):
         socketio.sleep(0.5)
 
 
-def background_colour_thread():
+def colour_thread():
     """Send the background colour."""
     while True:
-        socketio.emit("colour", {"data": json.loads(app.redis.get("current-colour"))})
-        socketio.sleep(0.5)
+        try:
+            colour = json.loads(app.redis.get("current-colour"))
+            if not colour == app.current_colour:
+                app.current_colour = colour
+                socketio.emit("colour", {"data": app.current_colour})
+        except TypeError:
+            pass
+
+        socketio.sleep(1)
 
 
 @socketio.event
@@ -59,8 +70,8 @@ def switch_lights(desired_state):
 
     socketio.emit("phase", {"data": params["phase"]})
     subprocess.Popen(["sudo", "service", params["service"], params["command-arg"]])
-    with thread_lock:
-        app.thread = socketio.start_background_task(background_thread(params))
+    with app.state_thread_lock:
+        app.thread = socketio.start_background_task(state_thread(params))
 
     socketio.emit("phase", {"data": params["expectation"]})
 
@@ -69,8 +80,8 @@ def switch_lights(desired_state):
 def connect():
     """Make first connection to the client."""
     socketio.emit("phase", {"data": service_state("queube-worker")})
-    # with other_thread_lock:
-    #     app.other_thread = socketio.start_background_task(background_colour_thread)
+    with app.colour_thread_lock:
+        app.other_thread = socketio.start_background_task(colour_thread)
 
 
 def service_state(service):
