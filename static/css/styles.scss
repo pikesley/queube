@@ -1,5 +1,5 @@
-@import url("https://fonts.googleapis.com/css2?family=Quicksand");
-$principal-font: "Quicksand";
+@import url("https://fonts.googleapis.com/css2?family=Nunito");
+$principal-font: "Nunito";
 
 @import "palettes/default";
 $red: $rgba-primary-0;
@@ -10,6 +10,8 @@ $shadow: black;
 $active: green;
 $inactive: red;
 $transitioning: orange;
+
+$padding: 20px;
 
 @mixin control($colour) {
     fill: $colour;
@@ -30,9 +32,16 @@ body {
 }
 
 h1 {
-    color: white;
-    font-size: 6em;
-    font-weight: 700;
+    color: grey;
+    font-size: 8em;
+    font-weight: bold;
+    padding: $padding;
+    margin: 0;
+}
+
+h2 {
+    color: grey;
+    font-size: 2em;
 }
 
 .active {
@@ -49,8 +58,8 @@ h1 {
 }
 
 #control-button {
-    width: 70%;
-    filter: drop-shadow(10px 10px 10px scale-color($shadow, $alpha: -40%));
+    width: 60%;
+    // filter: drop-shadow(10px 10px 10px scale-color($shadow, $alpha: -40%));
 
     #button {
         cursor: pointer;

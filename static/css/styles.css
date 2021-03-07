@@ -1,13 +1,19 @@
-@import url("https://fonts.googleapis.com/css2?family=Quicksand");
+@import url("https://fonts.googleapis.com/css2?family=Nunito");
 body {
-  font-family: "Quicksand";
+  font-family: "Nunito";
   background: black;
   text-align: center; }
 
 h1 {
-  color: white;
-  font-size: 6em;
-  font-weight: 700; }
+  color: grey;
+  font-size: 8em;
+  font-weight: bold;
+  padding: 20px;
+  margin: 0; }
+
+h2 {
+  color: grey;
+  font-size: 2em; }
 
 .active {
   fill: green; }
@@ -34,8 +40,7 @@ h1 {
     fill: black; }
 
 #control-button {
-  width: 70%;
-  filter: drop-shadow(10px 10px 10px rgba(0, 0, 0, 0.6)); }
+  width: 60%; }
   #control-button #button {
     cursor: pointer; }
 
