@@ -16,6 +16,8 @@ $(document).ready(function () {
 
         $('#control-button #button').html(buttons[buttonContent])
         $('#control-button').removeClass().addClass(currentPhase)
+
+        $('#status').text(currentPhase)
     })
 
     socket.on('colour', function (msg) {
