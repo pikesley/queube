@@ -1,38 +1,58 @@
-@import url("https://fonts.googleapis.com/css2?family=Londrina+Solid");
-$principal-font: "Londrina Solid";
+@import url("https://fonts.googleapis.com/css2?family=Quicksand");
+$principal-font: "Quicksand";
 
 @import "palettes/default";
 $red: $rgba-primary-0;
 $green: $rgba-complement-2;
 $orange: $rgba-secondary-1-2;
-$shadow: $rgba-primary-4;
+$shadow: black;
+
+$active: green;
+$inactive: red;
+$transitioning: orange;
+
+@mixin control($colour) {
+    fill: $colour;
+
+    .outer-ring {
+        fill: darken($colour, 10%);
+    }
+
+    .inner-part {
+        fill: black;
+    }
+}
 
 body {
     font-family: $principal-font;
-    background: white;
+    background: black;
     text-align: center;
 }
 
 h1 {
-    color: black;
+    color: white;
     font-size: 6em;
+    font-weight: 700;
 }
 
 .active {
-    fill: $green;
+    @include control($active);
 }
 
 .inactive {
-    fill: $red;
+    @include control($inactive);
 }
 
 .deactivating,
 .activating {
-    fill: $orange;
+    @include control($transitioning);
 }
 
-#switch {
+#control-button {
     width: 70%;
     filter: drop-shadow(10px 10px 10px scale-color($shadow, $alpha: -40%));
-    cursor: pointer;
+
+    #button {
+        cursor: pointer;
+    }
 }
