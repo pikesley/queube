@@ -81,7 +81,7 @@ def connect():
     """Make first connection to the client."""
     socketio.emit("phase", {"data": service_state("queube-worker")})
     with app.colour_thread_lock:
-        app.other_thread = socketio.start_background_task(colour_thread)
+        app.colour_thread = socketio.start_background_task(colour_thread)
 
 
 def service_state(service):
