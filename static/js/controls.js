@@ -8,7 +8,7 @@ lookups = {
 var socket
 
 $(document).ready(function () {
-    socket = io(`http://${location.hostname}:5000`);
+    socket = io(`ws://${location.hostname}:5000`);
 
     socket.on('phase', function (msg) {
         currentPhase = msg.data
