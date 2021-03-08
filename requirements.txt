@@ -6,3 +6,4 @@ redis
 Flask
 Flask_SocketIO
 flask-cors
+eventlet
