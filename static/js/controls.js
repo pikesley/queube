@@ -21,7 +21,7 @@ $(document).ready(function () {
     })
 
     socket.on('colour', function (msg) {
-        $('h1').css('color', `rgb(${ msg.data })`)
+        $('h1').css('color', `rgb(${msg.data})`)
     })
 });
 
